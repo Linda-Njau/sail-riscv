@@ -40,6 +40,15 @@ mapping clause assembly = UTYPE(imm, rd, op)
   <-> utype_mnemonic(op) ^ spc() ^ reg_name(rd) ^ sep() ^ hex_bits_signed_20(imm)
 
 /* ****************************************************************** */
+/* ****************************************************************** */
+union clause ast = LA : (regidx, bits(32))
+mapping clause assembly = LA(rd, imm)
+  <-> "la" ^ spc() ^ reg_name(rd) ^sep() ^ hex_bits_32(imm)
+
+val pseudo_of : ast <-> string
+scattered mapping pseudo_of
+mapping clause pseudo_of = LA(rd, imm) <-> [|"addi" ^ spc() ^ reg_name(rd) ^ sep()  ^"x0" ^ sep() ^ hex_bits_signed_12(imm[31..12]), "auipc" ^ spc() ^ reg_name(rd) ^ sep() ^ hex_bits_signed_20(imm[11..0])|]
+/* ****************************************************************** */
 union clause ast = RISCV_JAL : (bits(21), regidx)
 
 mapping clause encdec = RISCV_JAL(imm_19 @ imm_7_0 @ imm_8 @ imm_18_13 @ imm_12_9 @ 0b0, rd)
