@@ -9,6 +9,7 @@
 /* Put the illegal instructions last to use their wildcard match. */
 
 /* ****************************************************************** */
+function clause pseudo_of(s) = [|"illegal"|]
 
 mapping clause encdec = ILLEGAL(s) <-> s
 

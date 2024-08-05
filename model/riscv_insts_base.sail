@@ -45,9 +45,11 @@ union clause ast = LA : (regidx, bits(32))
 mapping clause assembly = LA(rd, imm)
   <-> "la" ^ spc() ^ reg_name(rd) ^sep() ^ hex_bits_32(imm)
 
-val pseudo_of : ast <-> string
-scattered mapping pseudo_of
-mapping clause pseudo_of = LA(rd, imm) <-> [|"addi" ^ spc() ^ reg_name(rd) ^ sep()  ^"x0" ^ sep() ^ hex_bits_signed_12(imm[31..12]), "auipc" ^ spc() ^ reg_name(rd) ^ sep() ^ hex_bits_signed_20(imm[11..0])|]
+val pseudo_of : ast -> list(string)
+scattered function pseudo_of
+function clause pseudo_of(LA(rd, imm)) = [|"addi" ^ spc() ^ reg_name(rd) ^ sep()  ^"x0" ^ sep() ^ hex_bits_signed_20(imm[31..12]) ^ ";" ^ "auipc" ^ spc() ^ reg_name(rd) ^ sep() ^ hex_bits_signed_12(imm[11..0])|]
+
+function clause execute LA(rd, imm) = {RETIRE_FAIL}
 /* ****************************************************************** */
 union clause ast = RISCV_JAL : (bits(21), regidx)
 
